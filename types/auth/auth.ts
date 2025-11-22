@@ -1,6 +1,7 @@
 interface User {
   mobile: string;
   roles: string[];
+  isAdmin: boolean;
 }
 
 interface TokenPayload {
