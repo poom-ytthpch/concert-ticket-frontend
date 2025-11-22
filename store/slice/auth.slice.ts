@@ -92,6 +92,7 @@ const authSlice = createSlice({
         if (payload.data?.login?.token) {
           const decodedToken = decode(payload.data.login.token) as DecodedToken;
           state.user = {
+            isAdmin: decodedToken.payload.userInfo.roles.includes("ADMIN"),
             mobile: decodedToken.payload.userInfo.mobile,
             roles: decodedToken.payload.userInfo.roles,
           };
