@@ -29,7 +29,7 @@ export default function Sidebar() {
         <MenuList />
       </div>
 
-      <div className="p-4 border-t absolute bottom-0 mb-10">
+      <div className="p-4  absolute bottom-0 mb-10">
         <Button
           icon={<LogoutOutlined />}
           block
