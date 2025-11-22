@@ -9,3 +9,12 @@ export const LoginMutation = gql`
     }
   }
 `;
+
+export const RegisterUserMutation = gql`
+  mutation RegisterUser($input: RegisterUserInput!) {
+    registerUser(input: $input) {
+      message
+      status
+    }
+  }
+`;

@@ -2,8 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import client from "../../common/apollo/client";
 import { showAlert } from "./alert.slice";
 import { decode } from "jsonwebtoken";
-import { LoginInput, LoginResponse, MutationLoginArgs } from "@/types/gql";
-import { LoginMutation } from "@/gql/auth";
+import {
+  LoginInput,
+  LoginResponse,
+  MutationLoginArgs,
+  MutationRegisterUserArgs,
+  RegisterUserInput,
+  RegisterUserResponse,
+} from "@/types/gql";
+import { LoginMutation, RegisterUserMutation } from "@/gql/auth";
 import Cookies from "js-cookie";
 import { AuthState, DecodedToken } from "@/types/auth/auth";
 
@@ -55,10 +62,66 @@ export const login = createAsyncThunk(
         showAlert({
           type: "error",
           title: "Login",
-          message: "Internal server error",
+          message: err.message || "Internal server error",
         })
       );
 
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const register = createAsyncThunk(
+  "auth/register",
+  async (
+    { email, password, username, confirmPassword }: RegisterUserInput,
+    thunkAPI
+  ) => {
+    try {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "loading",
+          title: "Register",
+          message: "Registering ...",
+        })
+      );
+      const res = await client.mutate<
+        { registerUser: RegisterUserResponse },
+        MutationRegisterUserArgs
+      >({
+        mutation: RegisterUserMutation,
+        variables: {
+          input: { email, password, username, confirmPassword },
+        },
+      });
+      if (!res.data?.registerUser.status) {
+        thunkAPI.dispatch(
+          showAlert({
+            type: "error",
+            title: "Register",
+            message: res.data?.registerUser.message || "Register failed",
+          })
+        );
+
+        return thunkAPI.rejectWithValue(res.data?.registerUser.message);
+      }
+      thunkAPI.dispatch(
+        showAlert({
+          type: "success",
+          title: "Register",
+          message: res.data?.registerUser.message || "Register successful",
+        })
+      );
+      return res;
+    } catch (err: any) {
+      console.log({ err });
+      thunkAPI.dispatch(
+        showAlert({
+          type: "error",
+          title: "Register",
+          message: err.message || "Internal server error",
+        })
+      );
       return thunkAPI.rejectWithValue(err.message);
     }
   }
