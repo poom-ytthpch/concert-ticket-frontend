@@ -3,13 +3,14 @@
 import { Layout, Button } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import MenuList from "./Menu";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slice/auth.slice";
 
 const { Sider } = Layout;
 
 export default function Sidebar() {
   const dispatch = useAppDispatch();
+  const auth = useAppSelector((state) => state.auth);
   return (
     <Sider
       breakpoint="md"
@@ -19,7 +20,9 @@ export default function Sidebar() {
       theme="light"
     >
       <div className="flex items-center gap-2 px-4 py-3">
-        <span className="text-lg font-bold text-black">Admin</span>
+        <span className="text-lg font-bold text-black">
+          {auth.user?.isAdmin ? "Admin" : "User"}
+        </span>
       </div>
 
       <div className="flex-1 overflow-y-auto">
