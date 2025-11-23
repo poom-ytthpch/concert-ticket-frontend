@@ -3,12 +3,14 @@
 import { Menu } from "antd";
 import { HomeOutlined, InboxOutlined, SyncOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/store/hooks";
-import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useMemo } from "react";
+import { switchUser } from "@/store/slice/auth.slice";
+
 const MenuList = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const auth = useAppSelector((state) => state.auth);
-  const [isUserAdmin, setIsUserAdmin] = useState<boolean>(false);
 
   const menuItems = [
     {
@@ -33,16 +35,23 @@ const MenuList = () => {
     },
   ];
 
-  useEffect(() => {
-    const isUserAndAdmin =
-      auth.user?.roles.includes("USER") && auth.user?.roles.includes("ADMIN");
-    setIsUserAdmin(isUserAndAdmin ?? false);
+  const isUserAdmin = useMemo(() => {
+    if (!auth.user) return false;
+    return (
+      auth.user.roles.includes("USER") && auth.user.roles.includes("ADMIN")
+    );
   }, [auth.user]);
+
   const handleClick = (e: { key: string }) => {
     if (e.key === "home") {
       router.push(`/`);
       return;
     }
+    if (e.key === "switch_to_user" || e.key === "switch_to_admin") {
+      dispatch(switchUser());
+      return;
+    }
+
     router.push(`/${e.key}`);
   };
 

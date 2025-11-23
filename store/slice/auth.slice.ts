@@ -143,6 +143,17 @@ const authSlice = createSlice({
       state.token = null;
       Cookies.remove("token");
     },
+    switchUser(state) {
+      const isUserAdmin =
+        state.user?.roles.includes("ADMIN") &&
+        state.user.roles.includes("USER");
+      if (state.user && isUserAdmin) {
+        state.user = {
+          ...state.user,
+          isAdmin: !state.user.isAdmin,
+        };
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -172,6 +183,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, switchUser } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;
