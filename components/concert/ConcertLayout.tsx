@@ -13,13 +13,9 @@ const SummaryConcert = dynamic(
   }
 );
 
-const ConcertTabs = dynamic(
-  () => import("./ConcertTabs"),
-  {
-    loading: () => <p>Loading...</p>,
-  }
-);
-
+const ConcertTabs = dynamic(() => import("./ConcertTabs"), {
+  loading: () => <p>Loading...</p>,
+});
 
 const ConcertLayout = () => {
   const dispatch = useAppDispatch();
@@ -41,10 +37,11 @@ const ConcertLayout = () => {
   return (
     <div className="w-full flex flex-col gap-4 p-4">
       {user?.isAdmin && summary && (
-        <SummaryConcert summary={summary as ConcertSummary} />
+        <div>
+          <SummaryConcert summary={summary as ConcertSummary} />
+          <ConcertTabs />
+        </div>
       )}
-
-      <ConcertTabs />
     </div>
   );
 };

@@ -1,9 +1,12 @@
 import client from "@/common/apollo/client";
-import { GetConcertsQuery } from "@/gql/concert";
+import { CreateConcertMutation, GetConcertsQuery } from "@/gql/concert";
 import {
+  CreateConcertInput,
+  CreateConcertResponse,
   GetConcertsInput,
   GetConcertsResponse,
   GetConcertsResponseResolvers,
+  MutationCreateConcertArgs,
   QueryGetConcertsArgs,
 } from "@/types/gql";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -40,6 +43,62 @@ export const getConcerts = createAsyncThunk(
         query: GetConcertsQuery,
         variables: {
           input: { take, skip, isAdmin },
+        },
+      });
+
+      if (!res.data) {
+        thunkAPI.dispatch(
+          showAlert({
+            type: "error",
+            title: "Concert",
+            message: res.error?.message || "Internal server error",
+          })
+        );
+        return thunkAPI.rejectWithValue(res.error?.message);
+      }
+
+      thunkAPI.dispatch(
+        showAlert({
+          type: "success",
+          title: "Concert",
+          message: "successful",
+        })
+      );
+
+      return res;
+    } catch (err: any) {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "error",
+          title: "Concert",
+          message: err.message || "Internal server error",
+        })
+      );
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const createConcert = createAsyncThunk(
+  "concert/createConcert",
+  async ({ totalSeats, name, description }: CreateConcertInput, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "loading",
+          title: "Concert",
+          message: "Loading ...",
+        })
+      );
+
+      const res = await client.mutate<
+        { createConcert: CreateConcertResponse },
+        MutationCreateConcertArgs
+      >({
+        mutation: CreateConcertMutation,
+        variables: {
+          input: { totalSeats, name, description },
         },
       });
 

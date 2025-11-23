@@ -26,3 +26,27 @@ export const GetConcertsQuery = gql`
     }
   }
 `;
+
+export const CreateConcertMutation = gql`
+  mutation CreateConcert($input: CreateConcertInput!) {
+    createConcert(input: $input) {
+      data {
+        id
+        name
+        description
+        totalSeats
+        seatsAvailable
+        createdAt
+        reservations {
+          id
+          userId
+          concertId
+          status
+          createdAt
+        }
+      }
+      status
+      message
+    }
+  }
+`;
