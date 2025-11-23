@@ -169,6 +169,9 @@ const authSlice = createSlice({
             isAdmin: decodedToken.payload.userInfo.roles.includes("ADMIN"),
             mobile: decodedToken.payload.userInfo.mobile,
             roles: decodedToken.payload.userInfo.roles,
+            username: decodedToken.payload.userInfo.username,
+            email: decodedToken.payload.userInfo.email,
+            id: decodedToken.payload.userInfo.id,
           };
           state.token = payload.data.login.token;
           Cookies.set("token", payload.data.login.token);

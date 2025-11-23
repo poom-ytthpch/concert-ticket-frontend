@@ -1,4 +1,7 @@
 interface User {
+  id: string;
+  username: string;
+  email: string;
   mobile: string;
   roles: string[];
   isAdmin: boolean;
