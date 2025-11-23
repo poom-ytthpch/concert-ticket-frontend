@@ -59,3 +59,12 @@ export const ReserveMutation = gql`
     }
   }
 `;
+
+export const CancelMutation = gql`
+  mutation Cancel($input: CancelInput!) {
+    cancel(input: $input) {
+      status
+      message
+    }
+  }
+`;

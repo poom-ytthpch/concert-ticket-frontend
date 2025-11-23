@@ -1,8 +1,13 @@
-import { ConcertGql, ReservationStatus, ReserveResponse } from "@/types/gql";
+import {
+  CancelResponse,
+  ConcertGql,
+  ReservationStatus,
+  ReserveResponse,
+} from "@/types/gql";
 import { Button, Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { deleteConcert, reserve } from "@/store/slice/concert.slice";
+import { cancel, deleteConcert, reserve } from "@/store/slice/concert.slice";
 import * as _ from "lodash";
 type Props = {
   concert: ConcertGql;
@@ -11,6 +16,11 @@ type Props = {
 const ConcertCard = ({ concert }: Props) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+  const userReservationStatus = _.get(
+    concert,
+    "userReservationStatus",
+    ReservationStatus.Pending
+  );
 
   const handleDelete = async () => {
     const id = _.get(concert, "id");
@@ -40,6 +50,48 @@ const ConcertCard = ({ concert }: Props) => {
     }
   };
 
+  const handleCancel = async () => {
+    if (!concert?.id || !user?.id) return;
+
+    const res = await dispatch(
+      cancel({ concertId: concert.id, userId: user.id })
+    );
+    const payload: any = (res as any)?.payload;
+    const data: CancelResponse = payload?.data?.cancel;
+
+    if (data) {
+      window.location.reload();
+    }
+  };
+
+  const RenderButton = () => {
+    switch (userReservationStatus) {
+      case ReservationStatus.Pending:
+        return (
+          <Button type="primary" disabled={true}>
+            Pending
+          </Button>
+        );
+        break;
+
+      case ReservationStatus.Reserved:
+        return (
+          <Button type="primary" onClick={() => handleCancel()} danger>
+            Cancel
+          </Button>
+        );
+        break;
+
+      default:
+        return (
+          <Button type="primary" onClick={() => handleReserve()}>
+            Reserve
+          </Button>
+        );
+        break;
+    }
+  };
+
   return (
     <Card
       key={concert.id}
@@ -61,20 +113,7 @@ const ConcertCard = ({ concert }: Props) => {
               Delete
             </Button>
           )}
-          {!user?.isAdmin &&
-            (concert.userReservationStatus === "RESERVED" ? (
-              <Button type="primary" danger>
-                Cancel
-              </Button>
-            ) : (
-              <Button type="primary" onClick={() => handleReserve()}>
-                {concert?.userReservationStatus === ReservationStatus.Reserved
-                  ? "Cancel"
-                  : concert?.userReservationStatus === ReservationStatus.Pending
-                  ? "Peding"
-                  : "Reserve"}
-              </Button>
-            ))}
+          {!user?.isAdmin && RenderButton()}
         </div>
       </div>
     </Card>
