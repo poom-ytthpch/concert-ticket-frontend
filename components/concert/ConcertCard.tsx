@@ -4,8 +4,8 @@ import {
   ReservationStatus,
   ReserveResponse,
 } from "@/types/gql";
-import { Button, Card } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Button, Card, Modal } from "antd";
+import { CloseCircleOutlined, UserOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { cancel, deleteConcert, reserve } from "@/store/slice/concert.slice";
 import * as _ from "lodash";
@@ -22,18 +22,52 @@ const ConcertCard = ({ concert }: Props) => {
     ReservationStatus.Pending
   );
 
+  const [modal] = Modal.useModal();
+
+  const showConfirm = () => {
+    Modal.confirm({
+      icon: null,
+      content: (
+        <div className="flex flex-col justify-center w-full items-center gap-2">
+          <div className="text-red-500">
+            <CloseCircleOutlined className="text-3xl " />
+          </div>
+          <span className="font-semibold">Are you sure to delete?</span>
+          <span className="font-semibold">"{concert.name}"</span>
+        </div>
+      ),
+      okButtonProps: {
+        style: { background: "red", width: "45%" },
+      },
+      cancelButtonProps: {
+        style: { width: "45%" },
+      },
+      centered: true,
+      width: 350,
+      okText: (
+        <div className="flex items-center gap-2 ">
+          <CloseCircleOutlined className="text-white" />
+          <span>Yes Delete</span>
+        </div>
+      ),
+      cancelText: "Cancel",
+      onOk: async () => {
+        const id = _.get(concert, "id");
+        if (!id) return;
+        const res = await dispatch(deleteConcert(id));
+
+        const payload: any = (res as any)?.payload;
+        const data: boolean = payload?.data?.deleteConcert;
+
+        if (data) {
+          window.location.reload();
+        }
+      },
+    });
+  };
+
   const handleDelete = async () => {
-    const id = _.get(concert, "id");
-
-    if (!id) return;
-    const res = await dispatch(deleteConcert(id));
-
-    const payload: any = (res as any)?.payload;
-    const data: boolean = payload?.data?.deleteConcert;
-
-    if (data) {
-      window.location.reload();
-    }
+    showConfirm();
   };
 
   const handleReserve = async () => {
