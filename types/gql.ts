@@ -71,7 +71,6 @@ export type ConcertSummary = {
 export type CreateConcertInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  seatsAvailable: Scalars['Int']['input'];
   totalSeats: Scalars['Int']['input'];
 };
 
