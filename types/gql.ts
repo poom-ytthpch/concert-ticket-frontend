@@ -82,6 +82,11 @@ export type CreateConcertResponse = {
   status?: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type GetConcertsInput = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type GetConcertsResponse = {
   __typename?: 'GetConcertsResponse';
   data?: Maybe<Array<Maybe<ConcertGql>>>;
@@ -156,6 +161,11 @@ export type Query = {
 
 export type QueryActivityLogsArgs = {
   input: ActivityLogsInput;
+};
+
+
+export type QueryGetConcertsArgs = {
+  input?: InputMaybe<GetConcertsInput>;
 };
 
 export type RegisterInput = {
@@ -308,6 +318,7 @@ export type ResolversTypes = {
   CreateConcertInput: CreateConcertInput;
   CreateConcertResponse: ResolverTypeWrapper<CreateConcertResponse>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
+  GetConcertsInput: GetConcertsInput;
   GetConcertsResponse: ResolverTypeWrapper<GetConcertsResponse>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   LoginInput: LoginInput;
@@ -340,6 +351,7 @@ export type ResolversParentTypes = {
   CreateConcertInput: CreateConcertInput;
   CreateConcertResponse: CreateConcertResponse;
   Date: Scalars['Date']['output'];
+  GetConcertsInput: GetConcertsInput;
   GetConcertsResponse: GetConcertsResponse;
   Int: Scalars['Int']['output'];
   LoginInput: LoginInput;
@@ -427,7 +439,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   _?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   activityLogs?: Resolver<Maybe<Array<Maybe<ResolversTypes['ActivityLogGql']>>>, ParentType, ContextType, RequireFields<QueryActivityLogsArgs, 'input'>>;
-  getConcerts?: Resolver<ResolversTypes['GetConcertsResponse'], ParentType, ContextType>;
+  getConcerts?: Resolver<ResolversTypes['GetConcertsResponse'], ParentType, ContextType, Partial<QueryGetConcertsArgs>>;
 };
 
 export type RegisterResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterResponse'] = ResolversParentTypes['RegisterResponse']> = {
