@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { alertReducer } from "./slice/alert.slice";
 import { authReducer } from "./slice/auth.slice";
+import { concertReducer } from "./slice/concert.slice";
 
 const persistConfig = {
   key: "root",
@@ -14,6 +15,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   alert: alertReducer,
   auth: authReducer,
+  concert: concertReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
