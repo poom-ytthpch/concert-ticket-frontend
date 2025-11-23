@@ -37,8 +37,8 @@ export type CancelInput = {
   userId: Scalars['String']['input'];
 };
 
-export type Cancelresponse = {
-  __typename?: 'Cancelresponse';
+export type CancelResponse = {
+  __typename?: 'CancelResponse';
   message: Scalars['String']['output'];
   status: Scalars['Boolean']['output'];
 };
@@ -107,7 +107,7 @@ export type LoginResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  cancel: Cancelresponse;
+  cancel: CancelResponse;
   createConcert: CreateConcertResponse;
   deleteConcert: Scalars['Boolean']['output'];
   login: LoginResponse;
@@ -311,7 +311,7 @@ export type ResolversTypes = {
   ActivityLogsInput: ActivityLogsInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CancelInput: CancelInput;
-  Cancelresponse: ResolverTypeWrapper<Cancelresponse>;
+  CancelResponse: ResolverTypeWrapper<CancelResponse>;
   CommonResponse: ResolverTypeWrapper<CommonResponse>;
   ConcertGql: ResolverTypeWrapper<ConcertGql>;
   ConcertSummary: ResolverTypeWrapper<ConcertSummary>;
@@ -344,7 +344,7 @@ export type ResolversParentTypes = {
   ActivityLogsInput: ActivityLogsInput;
   Boolean: Scalars['Boolean']['output'];
   CancelInput: CancelInput;
-  Cancelresponse: Cancelresponse;
+  CancelResponse: CancelResponse;
   CommonResponse: CommonResponse;
   ConcertGql: ConcertGql;
   ConcertSummary: ConcertSummary;
@@ -378,7 +378,7 @@ export type ActivityLogGqlResolvers<ContextType = any, ParentType extends Resolv
   userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type CancelresponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['Cancelresponse'] = ResolversParentTypes['Cancelresponse']> = {
+export type CancelResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CancelResponse'] = ResolversParentTypes['CancelResponse']> = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
 };
@@ -427,7 +427,7 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  cancel?: Resolver<ResolversTypes['Cancelresponse'], ParentType, ContextType, RequireFields<MutationCancelArgs, 'input'>>;
+  cancel?: Resolver<ResolversTypes['CancelResponse'], ParentType, ContextType, RequireFields<MutationCancelArgs, 'input'>>;
   createConcert?: Resolver<ResolversTypes['CreateConcertResponse'], ParentType, ContextType, RequireFields<MutationCreateConcertArgs, 'input'>>;
   deleteConcert?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteConcertArgs, 'id'>>;
   login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
@@ -473,7 +473,7 @@ export type UserGqlResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type Resolvers<ContextType = any> = {
   ActivityLogGql?: ActivityLogGqlResolvers<ContextType>;
-  Cancelresponse?: CancelresponseResolvers<ContextType>;
+  CancelResponse?: CancelResponseResolvers<ContextType>;
   CommonResponse?: CommonResponseResolvers<ContextType>;
   ConcertGql?: ConcertGqlResolvers<ContextType>;
   ConcertSummary?: ConcertSummaryResolvers<ContextType>;

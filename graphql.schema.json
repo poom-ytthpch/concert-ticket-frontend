@@ -187,7 +187,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "Cancelresponse",
+        "name": "CancelResponse",
         "description": null,
         "isOneOf": null,
         "fields": [
@@ -783,7 +783,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Cancelresponse",
+                "name": "CancelResponse",
                 "ofType": null
               }
             },
