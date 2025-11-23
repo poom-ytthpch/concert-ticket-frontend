@@ -43,7 +43,15 @@ export const getConcerts = createAsyncThunk(
         },
       });
 
-      console.log({ res });
+      if (!res.data) {
+        return thunkAPI.dispatch(
+          showAlert({
+            type: "error",
+            title: "Concert",
+            message: res.error?.message || "Internal server error",
+          })
+        );
+      }
 
       thunkAPI.dispatch(
         showAlert({
@@ -58,7 +66,7 @@ export const getConcerts = createAsyncThunk(
       thunkAPI.dispatch(
         showAlert({
           type: "error",
-          title: "Login",
+          title: "Concert",
           message: err.message || "Internal server error",
         })
       );
