@@ -83,6 +83,7 @@ export type CreateConcertResponse = {
 };
 
 export type GetConcertsInput = {
+  isAdmin: Scalars['Boolean']['input'];
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
 };
