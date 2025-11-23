@@ -4,12 +4,11 @@ import {
   CreateConcertInput,
   CreateConcertResponse,
   GetConcertsInput,
-  GetConcertsResponse,
   GetConcertsResponseResolvers,
   MutationCreateConcertArgs,
   QueryGetConcertsArgs,
 } from "@/types/gql";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { showAlert } from "./alert.slice";
 
 type DefaultState = {

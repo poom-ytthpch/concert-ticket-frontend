@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
 import { getConcerts } from "@/store/slice/concert.slice";
 import dynamic from "next/dynamic";
-import { ConcertSummary } from "@/types/gql";
+import { ConcertGql, ConcertSummary } from "@/types/gql";
+import ConcertList from "./ConcertList";
 
 const SummaryConcert = dynamic(
   () => import("../../components/concert/SummaryConcert"),
@@ -20,7 +21,7 @@ const ConcertTabs = dynamic(() => import("./ConcertTabs"), {
 const ConcertLayout = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
-  const { summary } = useAppSelector((state) => state.concert);
+  const { summary, data } = useAppSelector((state) => state.concert);
 
   useEffect(() => {
     if (!user) return;
@@ -39,7 +40,12 @@ const ConcertLayout = () => {
       {user?.isAdmin && summary && (
         <div>
           <SummaryConcert summary={summary as ConcertSummary} />
-          <ConcertTabs />
+          <ConcertTabs concerts={data as unknown as ConcertGql[]} />
+        </div>
+      )}
+      {!user?.isAdmin && (
+        <div>
+          <ConcertList concerts={data as unknown as ConcertGql[]} />
         </div>
       )}
     </div>

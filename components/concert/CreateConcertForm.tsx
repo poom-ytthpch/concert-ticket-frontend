@@ -5,7 +5,6 @@ import TextArea from "antd/es/input/TextArea";
 import { SaveOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createConcert, getConcerts } from "@/store/slice/concert.slice";
-import { useRouter } from "next/navigation";
 
 type Props = {
   handleSetTabs: (key: string) => void;

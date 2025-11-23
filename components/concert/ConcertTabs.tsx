@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import dynamic from "next/dynamic";
+import ConcertList from "./ConcertList";
+import { ConcertGql } from "@/types/gql";
 
 const CreateConcertForm = dynamic(() => import("./CreateConcertForm"), {
   ssr: false,
   loading: () => <p>Loading...</p>,
 });
 
-const items = (handleSetTabs: (key: string) => void): TabsProps["items"] => [
+const items = (
+  handleSetTabs: (key: string) => void,
+  concerts: ConcertGql[]
+): TabsProps["items"] => [
   {
     key: "1",
     label: "Overview",
-    children: "Content of Tab Pane 1",
+    children: <ConcertList concerts={concerts} />,
   },
   {
     key: "2",
@@ -21,7 +26,11 @@ const items = (handleSetTabs: (key: string) => void): TabsProps["items"] => [
   },
 ];
 
-const ConcertTabs: React.FC = () => {
+type Props = {
+  concerts: ConcertGql[];
+};
+
+const ConcertTabs = ({ concerts = [] }: Props) => {
   const [activeTab, setActiveTab] = useState<string>("1");
 
   const handleSetTabs = (key: string) => {
@@ -33,7 +42,7 @@ const ConcertTabs: React.FC = () => {
     <Tabs
       activeKey={activeTab}
       onChange={handleSetTabs}
-      items={items(handleSetTabs)} 
+      items={items(handleSetTabs, concerts)}
     />
   );
 };
