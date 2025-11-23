@@ -44,13 +44,14 @@ export const getConcerts = createAsyncThunk(
       });
 
       if (!res.data) {
-        return thunkAPI.dispatch(
+        thunkAPI.dispatch(
           showAlert({
             type: "error",
             title: "Concert",
             message: res.error?.message || "Internal server error",
           })
         );
+        return thunkAPI.rejectWithValue(res.error?.message);
       }
 
       thunkAPI.dispatch(
