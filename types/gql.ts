@@ -15,8 +15,14 @@ export type Scalars = {
   Date: { input: any; output: any; }
 };
 
+export enum ActivityLogAction {
+  Cancel = 'CANCEL',
+  Reserve = 'RESERVE'
+}
+
 export type ActivityLogGql = {
   __typename?: 'ActivityLogGql';
+  action?: Maybe<ActivityLogAction>;
   concert?: Maybe<ConcertGql>;
   concertId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Date']['output']>;
@@ -28,6 +34,12 @@ export type ActivityLogGql = {
 export type ActivityLogsInput = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ActivityLogsResponse = {
+  __typename?: 'ActivityLogsResponse';
+  data?: Maybe<Array<Maybe<ActivityLogGql>>>;
+  total?: Maybe<Scalars['Int']['output']>;
 };
 
 export type CancelInput = {
@@ -153,7 +165,7 @@ export type MutationReserveArgs = {
 export type Query = {
   __typename?: 'Query';
   _?: Maybe<Scalars['Boolean']['output']>;
-  activityLogs?: Maybe<Array<Maybe<ActivityLogGql>>>;
+  activityLogs: ActivityLogsResponse;
   getConcerts: GetConcertsResponse;
 };
 
