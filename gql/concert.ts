@@ -50,3 +50,9 @@ export const CreateConcertMutation = gql`
     }
   }
 `;
+
+export const DeleteConcertMutation = gql`
+  mutation DeleteConcert($id: String!) {
+    deleteConcert(id: $id)
+  }
+`;

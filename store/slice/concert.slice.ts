@@ -1,11 +1,16 @@
 import client from "@/common/apollo/client";
-import { CreateConcertMutation, GetConcertsQuery } from "@/gql/concert";
+import {
+  CreateConcertMutation,
+  DeleteConcertMutation,
+  GetConcertsQuery,
+} from "@/gql/concert";
 import {
   CreateConcertInput,
   CreateConcertResponse,
   GetConcertsInput,
   GetConcertsResponseResolvers,
   MutationCreateConcertArgs,
+  MutationDeleteConcertArgs,
   QueryGetConcertsArgs,
 } from "@/types/gql";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -126,6 +131,62 @@ export const createConcert = createAsyncThunk(
         showAlert({
           type: "error",
           title: "Concert",
+          message: err.message || "Internal server error",
+        })
+      );
+
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const deleteConcert = createAsyncThunk(
+  "concert/deleteConcert",
+  async (id: string, thunkAPI) => {
+    const title = "Delete Concert";
+    try {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "loading",
+          title,
+          message: "Loading ...",
+        })
+      );
+      const res = await client.mutate<
+        { deleteConcert: boolean },
+        { id: string }
+      >({
+        mutation: DeleteConcertMutation,
+        variables: {
+          id,
+        },
+      });
+
+      if (res.error) {
+        thunkAPI.dispatch(
+          showAlert({
+            type: "error",
+            title,
+            message: res.error?.message || "Internal server error",
+          })
+        );
+        return thunkAPI.rejectWithValue(res.error?.message);
+      }
+
+      thunkAPI.dispatch(
+        showAlert({
+          type: "success",
+          title,
+          message: "successful",
+        })
+      );
+
+      return res;
+    } catch (err: any) {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "error",
+          title: title,
           message: err.message || "Internal server error",
         })
       );

@@ -1,14 +1,30 @@
 import { ConcertGql } from "@/types/gql";
 import { Button, Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { useAppSelector } from "@/store/hooks";
-
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { deleteConcert } from "@/store/slice/concert.slice";
+import * as _ from "lodash";
 type Props = {
   concert: ConcertGql;
 };
 
 const ConcertCard = ({ concert }: Props) => {
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+
+  const handleDelete = async () => {
+    const id = _.get(concert, "id");
+
+    if (!id) return;
+    const res = await dispatch(deleteConcert(id));
+
+    const payload: any = (res as any)?.payload;
+    const data: boolean = payload?.data?.deleteConcert;
+
+    if (data) {
+      window.location.reload();
+    }
+  };
 
   return (
     <Card
@@ -27,7 +43,7 @@ const ConcertCard = ({ concert }: Props) => {
         </div>
         <div>
           {user?.isAdmin && (
-            <Button type="primary" danger>
+            <Button type="primary" onClick={() => handleDelete()} danger>
               Delete
             </Button>
           )}
