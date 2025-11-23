@@ -69,6 +69,8 @@ const MenuList = () => {
           return null;
         } else if (item.key === "switch_to_admin" && auth.user?.isAdmin) {
           return null;
+        } else if (item.key === "history" && !auth.user?.isAdmin || item.key === "home" && !auth.user?.isAdmin) {
+          return null;
         } else {
           return item;
         }

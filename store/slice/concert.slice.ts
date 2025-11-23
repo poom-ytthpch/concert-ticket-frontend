@@ -1,5 +1,6 @@
 import client from "@/common/apollo/client";
 import {
+  ActivityLogsQuery,
   CancelMutation,
   CreateConcertMutation,
   DeleteConcertMutation,
@@ -7,6 +8,8 @@ import {
   ReserveMutation,
 } from "@/gql/concert";
 import {
+  ActivityLogsInput,
+  ActivityLogsResponse,
   CancelInput,
   CancelResponse,
   CreateConcertInput,
@@ -16,6 +19,7 @@ import {
   MutationCancelArgs,
   MutationCreateConcertArgs,
   MutationReserveArgs,
+  QueryActivityLogsArgs,
   QueryGetConcertsArgs,
   ReserveInput,
   ReserveResponse,
@@ -280,6 +284,62 @@ export const cancel = createAsyncThunk(
         mutation: CancelMutation,
         variables: {
           input: { concertId, userId },
+        },
+      });
+
+      if (res.error) {
+        thunkAPI.dispatch(
+          showAlert({
+            type: "error",
+            title,
+            message: res.error?.message || "Internal server error",
+          })
+        );
+        return thunkAPI.rejectWithValue(res.error?.message);
+      }
+
+      thunkAPI.dispatch(
+        showAlert({
+          type: "success",
+          title,
+          message: "successful",
+        })
+      );
+
+      return res;
+    } catch (err: any) {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "error",
+          title: title,
+          message: err.message || "Internal server error",
+        })
+      );
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const activity_logs = createAsyncThunk(
+  "concert/activity_logs",
+  async ({ take, skip }: ActivityLogsInput, thunkAPI) => {
+    const title = "Activity Logs";
+
+    try {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "loading",
+          title,
+          message: "Loading ...",
+        })
+      );
+      const res = await client.query<
+        { activityLogs: ActivityLogsResponse },
+        QueryActivityLogsArgs
+      >({
+        query: ActivityLogsQuery,
+        variables: {
+          input: { take, skip },
         },
       });
 

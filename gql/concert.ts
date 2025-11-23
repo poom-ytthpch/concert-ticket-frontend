@@ -69,3 +69,22 @@ export const CancelMutation = gql`
     }
   }
 `;
+
+export const ActivityLogsQuery = gql`
+  query ActivityLogs($input: ActivityLogsInput!) {
+    activityLogs(input: $input) {
+      total
+      data {
+        id
+        action
+        createdAt
+        concert {
+          name
+        }
+        user {
+          username
+        }
+      }
+    }
+  }
+`;
