@@ -1,13 +1,5 @@
+import { AlertState, AlertType } from "@/types/alert";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-type AlertType = "success" | "info" | "warning" | "error" | "loading";
-
-interface AlertState {
-  type: AlertType | null;
-  message: string | null;
-  loading: boolean;
-  title: string | null;
-}
 
 const initialState: AlertState = {
   type: null,
