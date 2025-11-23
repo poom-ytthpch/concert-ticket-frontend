@@ -5,12 +5,20 @@ import { LogoutOutlined } from "@ant-design/icons";
 import MenuList from "./Menu";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slice/auth.slice";
+import { useRouter } from "next/navigation";
 
 const { Sider } = Layout;
 
 export default function Sidebar() {
   const dispatch = useAppDispatch();
   const auth = useAppSelector((state) => state.auth);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/login");
+  };
+
   return (
     <Sider
       breakpoint="md"
@@ -30,11 +38,7 @@ export default function Sidebar() {
       </div>
 
       <div className="p-4  absolute bottom-0 mb-10">
-        <Button
-          icon={<LogoutOutlined />}
-          block
-          onClick={() => dispatch(logout())}
-        >
+        <Button icon={<LogoutOutlined />} block onClick={() => handleLogout()}>
           Logout
         </Button>
       </div>

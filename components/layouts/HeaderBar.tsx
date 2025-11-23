@@ -6,6 +6,7 @@ import { LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import MenuList from "./Menu";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slice/auth.slice";
+import { useRouter } from "next/navigation";
 
 export default function HeaderBar() {
   const [open, setOpen] = useState(false);
@@ -14,6 +15,12 @@ export default function HeaderBar() {
   const onClose = () => setOpen(false);
   const dispatch = useAppDispatch();
   const auth = useAppSelector((state) => state.auth);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/login");
+  };
 
   return (
     <>
@@ -43,7 +50,7 @@ export default function HeaderBar() {
           <Button
             icon={<LogoutOutlined />}
             block
-            onClick={() => dispatch(logout())}
+            onClick={() => handleLogout()}
           >
             Logout
           </Button>
