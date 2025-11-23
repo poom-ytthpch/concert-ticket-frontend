@@ -7,7 +7,7 @@ type Props = {
 
 const ConcertList = ({ concerts = [] }: Props) => {
   return (
-    <div className="flex flex-col gap-4 overflow-auto">
+    <div className="flex flex-col gap-4 mb-4">
       {concerts.map((concert) => (
         <ConcertCard key={concert.id} concert={concert} />
       ))}

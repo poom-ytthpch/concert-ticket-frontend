@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 export const GetConcertsQuery = gql`
   query GetConcerts($input: GetConcertsInput) {
     getConcerts(input: $input) {
+      total
       data {
         id
         name

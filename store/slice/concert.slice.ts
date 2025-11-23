@@ -12,7 +12,7 @@ import {
   CreateConcertInput,
   CreateConcertResponse,
   GetConcertsInput,
-  GetConcertsResponseResolvers,
+  GetConcertsResponse,
   MutationCancelArgs,
   MutationCreateConcertArgs,
   MutationReserveArgs,
@@ -28,11 +28,12 @@ type DefaultState = {
   error: string | null;
 };
 
-const initialState: GetConcertsResponseResolvers & DefaultState = {
+const initialState: GetConcertsResponse & DefaultState = {
   loading: false,
   error: null,
   data: undefined,
   summary: undefined,
+  total: undefined,
 };
 
 export const getConcerts = createAsyncThunk(
@@ -48,7 +49,7 @@ export const getConcerts = createAsyncThunk(
       );
 
       const res = await client.query<
-        { getConcerts: GetConcertsResponseResolvers },
+        { getConcerts: GetConcertsResponse },
         QueryGetConcertsArgs
       >({
         query: GetConcertsQuery,
@@ -327,10 +328,14 @@ const concertSlice = createSlice({
       })
       .addCase(getConcerts.fulfilled, (state, { payload }) => {
         state.loading = false;
-        if (payload.data?.getConcerts) {
-          state.data = payload.data.getConcerts.data;
-          state.summary = payload.data.getConcerts.summary;
-        }
+
+        if (!payload.data?.getConcerts) return;
+
+        const { data: newConcerts, summary, total } = payload.data.getConcerts;
+        state.data = newConcerts;
+
+        state.summary = summary;
+        state.total = total;
       })
       .addCase(getConcerts.rejected, (state, { payload }) => {
         state.loading = false;

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import dynamic from "next/dynamic";
-import ConcertList from "./ConcertList";
 import { ConcertGql } from "@/types/gql";
 
 const CreateConcertForm = dynamic(() => import("./CreateConcertForm"), {
@@ -10,14 +9,31 @@ const CreateConcertForm = dynamic(() => import("./CreateConcertForm"), {
   loading: () => <p>Loading...</p>,
 });
 
+const ConcertList = dynamic(() => import("./ConcertList"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
 const items = (
   handleSetTabs: (key: string) => void,
-  concerts: ConcertGql[]
+  concerts: ConcertGql[],
+  lastElementRef?: (node: HTMLDivElement | null) => void
 ): TabsProps["items"] => [
   {
     key: "1",
     label: "Overview",
-    children: <ConcertList concerts={concerts} />,
+    children: (
+      <div style={{ overflowY: "auto", maxHeight: "70vh" }}>
+        {concerts.map((concert, index) => {
+          const isLast = concerts.length - 1 === index;
+          return (
+            <div key={concert.id} ref={isLast ? lastElementRef : null}>
+              <ConcertList concerts={[concert]} />
+            </div>
+          );
+        })}
+      </div>
+    ),
   },
   {
     key: "2",
@@ -28,13 +44,13 @@ const items = (
 
 type Props = {
   concerts: ConcertGql[];
+  lastElementRef?: (node: HTMLDivElement | null) => void;
 };
 
-const ConcertTabs = ({ concerts = [] }: Props) => {
+const ConcertTabs = ({ concerts = [], lastElementRef }: Props) => {
   const [activeTab, setActiveTab] = useState<string>("1");
 
   const handleSetTabs = (key: string) => {
-    console.log("Switching to tab:", key);
     setActiveTab(key);
   };
 
@@ -42,7 +58,7 @@ const ConcertTabs = ({ concerts = [] }: Props) => {
     <Tabs
       activeKey={activeTab}
       onChange={handleSetTabs}
-      items={items(handleSetTabs, concerts)}
+      items={items(handleSetTabs, concerts, lastElementRef)}
     />
   );
 };
