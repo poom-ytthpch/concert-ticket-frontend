@@ -2,7 +2,6 @@
 import { useAppDispatch } from "@/store/hooks";
 import { login, register } from "@/store/slice/auth.slice";
 import {
-  LoginInput,
   LoginResponse,
   RegisterUserInput,
   RegisterUserResponse,
@@ -38,6 +37,7 @@ const LoginForm = ({ isRegister }: Props) => {
       const res = await dispatch(login(values));
       const payload: any = (res as any)?.payload;
       const data: LoginResponse = payload?.data?.login;
+
       if (data.status) {
         router.push("/");
       }
@@ -53,7 +53,11 @@ const LoginForm = ({ isRegister }: Props) => {
   };
 
   return (
-    <div className={`${isRegister ? "h-[600px]" : "h-[400px]"} md:w-[500px] ${isRegister ? "md:h-[500px]" : "md:h-[350px]"} rounded-3xl p-6 shadow-lg bg-white/80  backdrop-blur-sm md:grid grid-cols-1 grid-rows-2 md:grid-cols-2  md:grid-rows-1`}>
+    <div
+      className={`${isRegister ? "h-[600px]" : "h-[400px]"} md:w-[500px] ${
+        isRegister ? "md:h-[500px]" : "md:h-[350px]"
+      } rounded-3xl p-6 shadow-lg bg-white/80  backdrop-blur-sm md:grid grid-cols-1 grid-rows-2 md:grid-cols-2  md:grid-rows-1`}
+    >
       <div className=" md:flex md:justify-center md:items-center">
         <Form form={form} layout="vertical" onFinish={handleRegisterLogin}>
           {isRegister && (
