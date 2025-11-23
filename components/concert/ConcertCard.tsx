@@ -1,8 +1,8 @@
-import { ConcertGql } from "@/types/gql";
+import { ConcertGql, ReservationStatus, ReserveResponse } from "@/types/gql";
 import { Button, Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { deleteConcert } from "@/store/slice/concert.slice";
+import { deleteConcert, reserve } from "@/store/slice/concert.slice";
 import * as _ from "lodash";
 type Props = {
   concert: ConcertGql;
@@ -26,6 +26,20 @@ const ConcertCard = ({ concert }: Props) => {
     }
   };
 
+  const handleReserve = async () => {
+    if (!concert?.id || !user?.id) return;
+
+    const res = await dispatch(
+      reserve({ concertId: concert.id, userId: user.id })
+    );
+    const payload: any = (res as any)?.payload;
+    const data: ReserveResponse = payload?.data?.reserve;
+
+    if (data) {
+      window.location.reload();
+    }
+  };
+
   return (
     <Card
       key={concert.id}
@@ -38,7 +52,7 @@ const ConcertCard = ({ concert }: Props) => {
         <div>
           <UserOutlined />
           <span className="ml-2">
-            {concert?.totalSeats?.toLocaleString() || 0}
+            {concert?.seatsAvailable?.toLocaleString() || 0}
           </span>
         </div>
         <div>
@@ -53,7 +67,13 @@ const ConcertCard = ({ concert }: Props) => {
                 Cancel
               </Button>
             ) : (
-              <Button type="primary">Reserve</Button>
+              <Button type="primary" onClick={() => handleReserve()}>
+                {concert?.userReservationStatus === ReservationStatus.Reserved
+                  ? "Cancel"
+                  : concert?.userReservationStatus === ReservationStatus.Pending
+                  ? "Peding"
+                  : "Reserve"}
+              </Button>
             ))}
         </div>
       </div>

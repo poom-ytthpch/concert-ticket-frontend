@@ -3,6 +3,7 @@ import {
   CreateConcertMutation,
   DeleteConcertMutation,
   GetConcertsQuery,
+  ReserveMutation,
 } from "@/gql/concert";
 import {
   CreateConcertInput,
@@ -11,7 +12,10 @@ import {
   GetConcertsResponseResolvers,
   MutationCreateConcertArgs,
   MutationDeleteConcertArgs,
+  MutationReserveArgs,
   QueryGetConcertsArgs,
+  ReserveInput,
+  ReserveResponse,
 } from "@/types/gql";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { showAlert } from "./alert.slice";
@@ -49,6 +53,8 @@ export const getConcerts = createAsyncThunk(
           input: { take, skip, isAdmin },
         },
       });
+
+      console.log({ res: res.data?.getConcerts });
 
       if (!res.data) {
         thunkAPI.dispatch(
@@ -191,6 +197,61 @@ export const deleteConcert = createAsyncThunk(
         })
       );
 
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
+export const reserve = createAsyncThunk(
+  "concert/reserve",
+  async ({ concertId, userId }: ReserveInput, thunkAPI) => {
+    const title = "Reserve Concert";
+    try {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "loading",
+          title,
+          message: "Loading ...",
+        })
+      );
+      const res = await client.mutate<
+        { reserve: ReserveResponse },
+        MutationReserveArgs
+      >({
+        mutation: ReserveMutation,
+        variables: {
+          input: { concertId, userId },
+        },
+      });
+
+      if (res.error) {
+        thunkAPI.dispatch(
+          showAlert({
+            type: "error",
+            title,
+            message: res.error?.message || "Internal server error",
+          })
+        );
+        return thunkAPI.rejectWithValue(res.error?.message);
+      }
+
+      thunkAPI.dispatch(
+        showAlert({
+          type: "success",
+          title,
+          message: "successful",
+        })
+      );
+
+      return res;
+    } catch (err: any) {
+      thunkAPI.dispatch(
+        showAlert({
+          type: "error",
+          title: title,
+          message: err.message || "Internal server error",
+        })
+      );
       return thunkAPI.rejectWithValue(err.message);
     }
   }

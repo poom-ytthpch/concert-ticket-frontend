@@ -10,13 +10,7 @@ export const GetConcertsQuery = gql`
         totalSeats
         seatsAvailable
         createdAt
-        reservations {
-          id
-          userId
-          concertId
-          status
-          createdAt
-        }
+        userReservationStatus
       }
       summary {
         totalSeat
@@ -54,5 +48,14 @@ export const CreateConcertMutation = gql`
 export const DeleteConcertMutation = gql`
   mutation DeleteConcert($id: String!) {
     deleteConcert(id: $id)
+  }
+`;
+
+export const ReserveMutation = gql`
+  mutation Reserve($input: ReserveInput!) {
+    reserve(input: $input) {
+      status
+      message
+    }
   }
 `;
