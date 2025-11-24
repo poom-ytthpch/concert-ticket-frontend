@@ -28,6 +28,9 @@ Open [http://localhost:3000/your-path](http://localhost:3000/your-path) with you
 
 This project is inspired and supported by various great tools and communities. Special thanks to:
 
+- Next.js Framework – For its powerful SSR/SSG capabilities and modern web development experience
+- Ant Design – For providing elegant and easy-to-use UI components
+- Redux Toolkit – For simplifying state management and improving code structure
+- TypeScript Community – For enabling safer and more maintainable code
 - UseEffectOnce Hook Idea – Originally from frontend development but helpful in improving overall workflow
-  
 - All open-source contributors and communities for their continuous effort and innovation
