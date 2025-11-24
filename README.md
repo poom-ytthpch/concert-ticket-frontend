@@ -5,6 +5,32 @@
 
 </p>
 
+## Repository Structure
+
+```
+concert-ticket-frontend/
+├─ app/
+|    ├─ history/
+|    ├─ login/
+|    ├─ register/
+├─ common/
+|    ├─ apollo/
+|    ├─ cookie/
+|    ├─ redux/
+|    ├─ useEffct/  
+├─  components/
+|    ├─ alert/
+|    ├─ concert/
+|    ├─ history/
+|    ├─ layouts/
+|    ├─ login/
+├─  gql/
+├─  public/
+├─  store/
+|    ├─ slice/
+└─ types/                
+```
+
 ## Project setup
 
 ```bash
